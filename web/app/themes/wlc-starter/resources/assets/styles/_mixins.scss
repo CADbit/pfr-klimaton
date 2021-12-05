@@ -1,0 +1,300 @@
+@mixin font-face($font-name,
+$font-path,
+$font-weight: 400,
+$font-style: normal,
+$support-required: "modern",
+) {
+  @font-face {
+    font-family: $font-name;
+    font-style: $font-style;
+    font-weight: $font-weight;
+    font-display: swap;
+
+    @if $support-required=="oldie" {
+      src: url("#{$font-path}.eot");
+      src:
+        url("#{$font-path}.eot?#iefix") format("embedded-opentype"),
+        url("#{$font-path}.woff2") format("woff2"),
+        url("#{$font-path}.woff") format("woff"),
+        url("#{$font-path}.ttf") format("truetype");
+    }
+
+    @if $support-required=="recent" {
+      src:
+        url("#{$font-path}.woff2") format("woff2"),
+        url("#{$font-path}.woff") format("woff"),
+        url("#{$font-path}.ttf") format("truetype");
+    }
+
+    @if $support-required=="modern" {
+      src:
+        url("#{$font-path}.woff2") format("woff2"),
+        url("#{$font-path}.woff") format("woff");
+    }
+  }
+
+  @if $support-required !="oldie"and $support-required !="recent"and $support-required !="modern" {
+    @error "Invalid support-required value. Must be "oldie"==>IE8 and above/ Android native browser 4+/ Safari 4.3 OR "recent"==>IE9+/ Android native browser 4.0+/ Safari 4.3+ OR "modern"==>IE9+/ Android native browser 4.4+/ Safari 5.1+";
+  }
+}
+
+// =============================================================================
+// PX TO REM
+// =============================================================================
+@function rem($size) {
+  $remSize: $size / $base-font-size;
+
+  @return $remSize * 1rem;
+}
+
+// =============================================================================
+// CUSTOM MEDIA QUERIES
+// =============================================================================
+@function min-breakpoint($breakpoint) {
+  @if map-has-key($grid-breakpoint, $breakpoint) {
+    @return map-get($grid-breakpoint, $breakpoint);
+  }
+
+  @return $breakpoint;
+}
+
+@function max-breakpoint($breakpoint) {
+  @if map-has-key($grid-breakpoint, $breakpoint) {
+    @return map-get($grid-breakpoint, $breakpoint) - 1px;
+  }
+
+  @else {
+    @return $breakpoint;
+  }
+}
+
+@mixin min-width($breakpoint) {
+  @media (min-width: min-breakpoint($breakpoint)) {
+    @content;
+  }
+}
+
+@mixin max-width($breakpoint) {
+  @media (max-width: max-breakpoint($breakpoint)) {
+    @content;
+  }
+}
+
+@mixin max-height($breakpoint) {
+  @media (max-height: max-breakpoint($breakpoint)) {
+    @content;
+  }
+}
+
+@mixin min-height($breakpoint) {
+  @media (min-height: min-breakpoint($breakpoint)) {
+    @content;
+  }
+}
+
+// =============================================================================
+// CUSTOM TRANSITIONS
+// =============================================================================
+@mixin transition($property: all,
+$duration: $default-transition-duration,
+$timing: $default-transition-timing,
+$delay: 0s) {
+  transition-property: $property;
+  transition-duration: $duration;
+  transition-timing-function: $timing;
+  transition-delay: $delay;
+}
+
+// =============================================================================
+// RESPONSIVE FONTS
+// =============================================================================
+@function strip-unit($value) {
+  @return $value / ($value * 0 + 1);
+}
+
+// $min-font-size - min font size for responsive range
+// $max-font-size - max font size for responsive range
+// $min-vw - min width responsive range
+// $max-vw - max width responsive range
+
+@mixin fluid-type($min-vw, $max-vw, $min-font-size, $max-font-size) {
+  $u1: unit($min-vw);
+  $u2: unit($max-vw);
+  $u3: unit($min-font-size);
+  $u4: unit($max-font-size);
+
+  @if $u1==$u2 and $u1==$u3 and $u1==$u4 {
+    & {
+      font-size: $min-font-size;
+
+      @media screen and (min-width: $min-vw) {
+        font-size: calc(#{$min-font-size} + #{strip-unit($max-font-size - $min-font-size)} * ((100vw - #{$min-vw}) / #{strip-unit($max-vw - $min-vw)}));
+      }
+
+      @media screen and (min-width: $max-vw) {
+        font-size: $max-font-size;
+      }
+    }
+  }
+}
+
+// =============================================================================
+// ASPECT RATIO
+// =============================================================================
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+
+  &::before {
+    display: block;
+    content: "";
+    width: 100%;
+    padding-top: ($height / $width) * 100%;
+  }
+
+  > .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+// =============================================================================
+// ASPECT RATIO
+// =============================================================================
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+
+  &::before {
+    display: block;
+    content: "";
+    width: 100%;
+    padding-top: ($height / $width) * 100%;
+  }
+
+  > .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+// =============================================================================
+// ASPECT RATIO
+// =============================================================================
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+
+  &::before {
+    display: block;
+    content: "";
+    width: 100%;
+    padding-top: ($height / $width) * 100%;
+  }
+
+  > .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+@mixin colorSVG($color: var(--color-text)) {
+  svg {
+    * {
+      fill: $color;
+    }
+  }
+}
+
+// =============================================================================
+//CSS Checkbox
+// =============================================================================
+
+@mixin css-checkbox(
+  $size: "16px",
+  $selectedColor: #444,
+  $checkColor: #FFF,
+  $valign: "middle",
+  $rounded: rounded
+) {
+  display: none;
+
+  &:hover::after { opacity: 1; }
+
+  + i {
+    box-sizing: border-box;
+    position: relative;
+    display: inline-block;
+    top: -1px;
+    width: #{$size};
+    height: #{$size};
+    margin: 0;
+    vertical-align: #{$valign};
+    transition: background 200ms ease;
+
+    @if $rounded == "circle" {
+      border-radius: 10em;
+    }
+
+    @else if $rounded == "rounded" {
+      border-radius: 0.2em;
+    }
+
+    @else {
+      border-radius: 0;
+    }
+
+    background: var(--color-text-white);
+    font-size: #{$size};
+    cursor: pointer;
+
+    &::after {
+      content: "";
+      opacity: 0;
+      transform: translateZ(1px) rotate(-45deg);
+      outline: 1px solid transparent; // hack to prevent antialias atrifacts in firefox
+      position: absolute;
+      top: 22%;
+      left: 15%;
+      width: 0.68em;
+      height: 0.4em;
+      border: 0.15em solid #222;
+      border-top: none;
+      border-right: none;
+      background: rgba(0, 0, 0, 0);
+    }
+
+    &::before,
+    &::after {
+      box-sizing: border-box;
+    }
+
+    &:hover::after { opacity: 0.2; }
+  }
+
+  &:checked + i {
+    background: #{$selectedColor};
+    border-color: #{$selectedColor};
+
+    &::after {
+      opacity: 1;
+      border-color: #{$checkColor};
+    }
+  }
+}
+
+@mixin list-unstyled {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  li::before {
+    display: none !important;
+  }
+}

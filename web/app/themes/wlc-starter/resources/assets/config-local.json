@@ -1,0 +1,6 @@
+{
+  "//": "If your using this file, pleace delete this line and delete the '!' in .gitignore. You can using this file for compiling assets in local enviroment. Analogous to config.js.",
+  "entry": {
+    
+  }
+}
